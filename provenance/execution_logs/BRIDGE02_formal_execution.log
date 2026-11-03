@@ -1,0 +1,45 @@
+{
+  "stage": "LGE-BRIDGE-02 formal execution",
+  "contract_sha256": "76ff7888256a588d2b28b3c5ac0b33812c1287bfbaac3f47d24ef6bcf2a55cef",
+  "n_worlds": 128,
+  "matched_admissibility_fraction": 1.0,
+  "context_swap_admissibility_fraction": 1.0,
+  "hard_direct_win_fraction": 1.0,
+  "hard_direct_win_wilson95": [
+    0.9708630437264916,
+    1.0
+  ],
+  "median_Delta_direct": 0.016537408040815035,
+  "median_Delta_direct_bootstrap95": [
+    0.016238973185794217,
+    0.016880972628183014
+  ],
+  "context_swap_reversal_fraction": 1.0,
+  "context_swap_reversal_wilson95": [
+    0.9708630437264916,
+    1.0
+  ],
+  "wrong_sign_sanity_win_fraction": 1.0,
+  "alternative_path_true_win_fraction": 1.0,
+  "alternative_path_wilson95": [
+    0.9708630437264916,
+    1.0
+  ],
+  "alternative_path_interpretation": "ALTPATH_SPECIFICITY_SUPPORTED",
+  "max_residual": 2.2157276013956562e-13,
+  "max_effective_spectral_radius": 0.18354924958907132,
+  "decision": "GO_HARD_DECOY_LOCAL_EQUILIBRIUM_RELIABILITY_SUPPORTED",
+  "claim_scope": {
+    "allowed_if_go": "Under a prospectively frozen synthetic local-regulatory generator, equilibrium response can distinguish a context-coherent direct mechanism from a higher-confidence direct-edge decoy matched on source, module, direct-edge sign and magnitude, motif degree, and absolute two-step path burden.",
+    "prohibited": [
+      "real genomic loci are biological steady states",
+      "equilibrium reliability is a posterior probability",
+      "equilibrium reliability reweights or calibrates real-data PIPs",
+      "the stress test establishes direct regulatory causality in real data",
+      "the stress test proves alternative-path specificity unless the prespecified secondary endpoint supports it",
+      "the stress test validates a real-GWAS-to-equilibrium-field mapping"
+    ]
+  }
+}
+
+FORMAL_EXECUTION_EXIT_CODE=0

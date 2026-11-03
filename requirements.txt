@@ -1,0 +1,6 @@
+numpy>=1.26,<3
+pandas>=2.0,<3
+scipy>=1.11,<2
+anndata>=0.10,<1
+h5py>=3.10,<4
+requests>=2.31,<3

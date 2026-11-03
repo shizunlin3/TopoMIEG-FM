@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.DS_Store
+# Large public-source inputs and regenerated intermediates are intentionally not versioned.
+data/raw/
+data/work/
+predictions/
+outcomes/
+*.h5ad
+*.tar.gz

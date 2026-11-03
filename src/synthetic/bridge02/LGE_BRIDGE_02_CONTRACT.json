@@ -1,0 +1,157 @@
+{
+  "stage": "RECOMB-SA5R3",
+  "experiment": "LGE-BRIDGE-02",
+  "status": "PROSPECTIVE_FROZEN_NOT_EXECUTED",
+  "parent_evidence": {
+    "LGE_BRIDGE_01_decision": "GO",
+    "purpose_of_new_experiment": "stress-test the local-equilibrium reliability axis after the BRIDGE-01 ceiling result using structurally plausible hard decoys",
+    "no_reuse_of_BRIDGE_01_worlds": true
+  },
+  "scientific_question": "Can local-equilibrium response distinguish a context-coherent direct mechanism from a deliberately higher-confidence, same-module, same-sign, direct-edge hard decoy whose one-step evidence and lower-order graph burden are matched?",
+  "claim_scope": {
+    "allowed_if_go": "Under a prospectively frozen synthetic local-regulatory generator, equilibrium response can distinguish a context-coherent direct mechanism from a higher-confidence direct-edge decoy matched on source, module, direct-edge sign and magnitude, motif degree, and absolute two-step path burden.",
+    "prohibited": [
+      "real genomic loci are biological steady states",
+      "equilibrium reliability is a posterior probability",
+      "equilibrium reliability reweights or calibrates real-data PIPs",
+      "the stress test establishes direct regulatory causality in real data",
+      "the stress test proves alternative-path specificity unless the prespecified secondary endpoint supports it",
+      "the stress test validates a real-GWAS-to-equilibrium-field mapping"
+    ]
+  },
+  "model": {
+    "state_space": "u in (-1,1)^p",
+    "equilibrium_map": "Phi(u;b,W)=tanh(b+W u)",
+    "fixed_point": "u*=Phi(u*;b,W)",
+    "jacobian": "J=diag(1-u*^2) W",
+    "operator_norm_target": 0.3,
+    "global_contraction_design": "||W||_2=0.30 so the global Lipschitz constant is <=0.30<1",
+    "reliability_score": "R_eq(M)=s_claim*(u1[target]-u0[target])/|delta|; larger is more compatible",
+    "posterior_semantics": "none; R_eq is an orthogonal synthetic reliability quantity"
+  },
+  "world_generator": {
+    "rng": "NumPy PCG64DXSM",
+    "seed": 20261104,
+    "n_worlds": 128,
+    "p": 32,
+    "n_modules": 4,
+    "module_size": 8,
+    "background_within_edge_probability_other_modules": 0.35,
+    "background_cross_edge_probability": 0.05,
+    "background_within_abs_weight_range": [
+      0.15,
+      0.55
+    ],
+    "background_cross_abs_weight_range": [
+      0.05,
+      0.25
+    ],
+    "background_positive_probability": 0.5,
+    "operator_norm_target": 0.3,
+    "baseline_field_sd": 0.08,
+    "baseline_field_clip": 0.25,
+    "matched_true_and_direct_decoy_baseline_field": true,
+    "source_perturbation_abs_delta": 0.5,
+    "perturbation_sign_rule": "even world_id +delta; odd world_id -delta",
+    "source_module_rule": "choose one module uniformly; randomly permute its eight nodes into source,true,direct_decoy,altpath_decoy,m1,m2,m3,m4",
+    "motif_direct_abs_weight_range": [
+      0.75,
+      0.9
+    ],
+    "motif_source_to_mediator_abs_weight_range": [
+      0.55,
+      0.75
+    ],
+    "motif_mediator_to_target_abs_weight_range": [
+      0.45,
+      0.65
+    ],
+    "motif_sign_rule": "draw q in {-1,+1}; source->true and source->direct_decoy both q*w_direct; source->all four mediators q*a; mediator->target signs define contextual coherence",
+    "true_context": "two reinforcing two-step paths: m1->true=+b and m2->true=+b",
+    "hard_direct_decoy_context": "one reinforcing and one cancelling two-step path with identical absolute path burden: m3->direct=+b and m4->direct=-b",
+    "alternative_path_context": "no source->altpath direct edge; m3->altpath=+b and m4->altpath=+b, giving two reinforcing two-step paths",
+    "external_context_matching": "true and hard_direct targets receive identical cross-module inbound/outbound edges and identical baseline field; their direct source edges have identical signed magnitude",
+    "context_swap_control": "flip only the second mediator sign at true and hard_direct: true becomes reinforcing/cancelling and hard_direct becomes reinforcing/reinforcing; direct source edges and matched external context remain unchanged"
+  },
+  "candidate_mechanisms": {
+    "true": "same source; context-coherent direct target; claimed sign=sign(delta*W[true,source])",
+    "hard_direct": "same source and module; direct edge has exactly the same signed magnitude as true; same claimed sign; same motif degree and absolute two-step path burden, but one two-step path cancels",
+    "alternative_path": "same source and module; no direct source edge; two reinforcing two-step paths; same claimed sign; specificity-boundary control",
+    "wrong_sign": "true source and true target with the claimed sign reversed"
+  },
+  "confidence_stress_test": {
+    "interpretation": "adversarial synthetic confidence ordering; not calibrated probability",
+    "true_confidence": 0.8,
+    "hard_direct_confidence": 0.97,
+    "alternative_path_confidence": 0.95,
+    "wrong_sign_confidence": 0.6,
+    "purpose": "ensure confidence alone prefers both hard decoys to the context-coherent true mechanism"
+  },
+  "solver": {
+    "initial_state": "tanh(b)",
+    "iteration": "Picard fixed-point iteration",
+    "tolerance": 1e-12,
+    "max_iterations": 10000,
+    "formal_residual_threshold": 1e-10,
+    "formal_effective_spectral_radius_threshold": 0.35
+  },
+  "primary_endpoints": {
+    "hard_direct_paired_delta": "Delta_direct=R_eq(true)-R_eq(hard_direct)",
+    "hard_direct_win_fraction": "fraction of worlds with Delta_direct>0",
+    "context_swap_reversal_fraction": "fraction of worlds in which matched graph ranks true>hard_direct and the context-swap graph ranks hard_direct>true",
+    "uncertainty": {
+      "win_intervals": "Wilson 95% CI",
+      "bootstrap_replicates": 2000,
+      "bootstrap_seed": 20261105,
+      "bootstrap_interval": "percentile 95% CI for median Delta_direct"
+    }
+  },
+  "secondary_endpoints": {
+    "alternative_path": "R_eq(true)-R_eq(alternative_path); reported as a specificity-boundary result and cannot rescue a failed primary gate",
+    "alternative_path_interpretation": {
+      "supported": "true-over-altpath win fraction >=0.65 and Wilson lower >0.50",
+      "ambiguous": "true-over-altpath win fraction between 0.35 and 0.65 inclusive, or CI crosses 0.50",
+      "downstream_compatibility_dominates": "true-over-altpath win fraction <0.35"
+    },
+    "wrong_sign_sanity": "fraction with R_eq(true)>R_eq(wrong_sign)",
+    "residual_and_rho": "max and distribution of residuals/effective spectral radii",
+    "context_swap_delta": "R_eq(hard_direct,swap)-R_eq(true,swap)"
+  },
+  "go_no_go": {
+    "hard_preconditions": [
+      "exactly 128 worlds generated with unique world_id and no post-hoc exclusion",
+      "all role nodes are distinct and true/hard_direct/alternative_path are in the source module",
+      "true and hard_direct direct edges have identical signed magnitude within 1e-12 after scaling",
+      "true and hard_direct have equal motif in-degree and equal absolute two-step path burden by construction",
+      "alternative_path has no direct source edge",
+      "all matched and context-swap baseline/perturbed solves are admissible",
+      "no NaN/Inf",
+      "frozen contract/runner/launcher hashes match the freeze manifest"
+    ],
+    "go_requires_all": [
+      "hard_direct win fraction >=0.65",
+      "Wilson 95% lower bound for hard_direct win fraction >0.50",
+      "95% bootstrap lower bound for median Delta_direct >0",
+      "context-swap reversal fraction >=0.65",
+      "Wilson 95% lower bound for context-swap reversal fraction >0.50",
+      "wrong-sign sanity win fraction >=0.95"
+    ],
+    "no_go_decision": "NO_GO_HARD_DECOY_LOCAL_EQUILIBRIUM_PRIMARY_CLAIM",
+    "go_decision": "GO_HARD_DECOY_LOCAL_EQUILIBRIUM_RELIABILITY_SUPPORTED"
+  },
+  "execution_governance": {
+    "formal_execution_authorized_in_SA5R3": false,
+    "required_authorization_filename": "LGE_BRIDGE_02_EXECUTION_AUTHORIZATION.txt",
+    "required_authorization_exact_text": "AUTHORIZED_AFTER_RECOMB_SA5R3_FREEZE",
+    "real_data_access": false,
+    "locked_3600_access": false,
+    "adaptive_tuning_after_results": false,
+    "post_hoc_world_exclusion": false,
+    "formal_execution_count": "one authorized run only"
+  },
+  "outputs": {
+    "world_level_tsv": "LGE_BRIDGE_02_world_results.tsv",
+    "summary_json": "LGE_BRIDGE_02_summary.json",
+    "gate_json": "LGE_BRIDGE_02_GATE.json"
+  }
+}

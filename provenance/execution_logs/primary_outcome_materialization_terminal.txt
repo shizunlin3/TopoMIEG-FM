@@ -1,0 +1,233 @@
+(base) linyibu@DESKTOP-RSSC3MS:/mnt/c/Users/Linyibu/Downloads$ cd /mnt/c/Users/Linyibu/Downloads
+
+PY="$HOME/miniconda3/envs/topomieg-fm/bin/python"
+
+"$PY" - <<'PY'
+from pathlib import Path
+import h5py
+import numpy as np
+import pandas as pd
+import json
+import hashlib
+
+ROOT = Path("/mnt/c/Users/Linyibu/Downloads")
+H5 = ROOT / "assets/vault/ReplogleWeissman2022_K562_gwps.h5ad"
+
+SOURCE_FILE = ROOT / "RECOMB-SA5R9R2B3_BLIND_SOURCE_UNIVERSE.tsv"
+PRED_FILE = ROOT / "predictions/prediction_vectors.tsv.gz"
+
+OUTDIR = ROOT / "outcomes"
+OUTDIR.mkdir(exist_ok=True)
+
+CONTROL_CHUNK = 512
+
+def sha256(p):
+    h = hashlib.sha256()
+    with open(p, "rb") as f:
+        for chunk in iter(lambda: f.read(1024 * 1024), b""):
+PYint("\nSA5R9R3B_OUTCOME_MATERIALIZATION_PASS")son"t.tsv"),ed control mean",
+=== R3B LOAD METADATA ===
+controls = 75328
+batches = 267
+genes = 8248
+
+=== MATERIALIZE CONTROL BATCH MEANS ===
+control rows processed = 512 / 75328
+control rows processed = 13312 / 75328
+control rows processed = 26112 / 75328
+control rows processed = 38912 / 75328
+control rows processed = 51712 / 75328
+control rows processed = 64512 / 75328
+CONTROL_BATCH_MEANS_PASS
+
+=== MATERIALIZE FROZEN SOURCE RESPONSES ===
+01/39 MYC cells= 99 guides= 1 batches= 78 guide_batch_units= 78
+02/39 E2F1 cells= 226 guides= 1 batches= 149 guide_batch_units= 149
+03/39 ZNF263 cells= 333 guides= 2 batches= 193 guide_batch_units= 241
+04/39 STAT1 cells= 127 guides= 1 batches= 101 guide_batch_units= 101
+05/39 E2F4 cells= 158 guides= 1 batches= 117 guide_batch_units= 117
+06/39 SP1 cells= 198 guides= 1 batches= 143 guide_batch_units= 143
+07/39 TP53 cells= 220 guides= 1 batches= 137 guide_batch_units= 137
+08/39 FOXP1 cells= 816 guides= 4 batches= 251 guide_batch_units= 545
+09/39 ESR1 cells= 177 guides= 2 batches= 124 guide_batch_units= 133
+10/39 HIF1A cells= 163 guides= 1 batches= 120 guide_batch_units= 120
+11/39 NFKB1 cells= 321 guides= 1 batches= 189 guide_batch_units= 189
+12/39 ETS1 cells= 352 guides= 1 batches= 184 guide_batch_units= 184
+13/39 RELA cells= 185 guides= 1 batches= 139 guide_batch_units= 139
+14/39 EGR1 cells= 374 guides= 2 batches= 198 guide_batch_units= 254
+15/39 CTCF cells= 109 guides= 1 batches= 86 guide_batch_units= 86
+16/39 JUN cells= 216 guides= 1 batches= 155 guide_batch_units= 155
+17/39 SPI1 cells= 82 guides= 1 batches= 70 guide_batch_units= 70
+18/39 FOS cells= 406 guides= 2 batches= 204 guide_batch_units= 275
+19/39 YY1 cells= 177 guides= 1 batches= 134 guide_batch_units= 134
+20/39 STAT3 cells= 170 guides= 1 batches= 119 guide_batch_units= 119
+21/39 CREB1 cells= 198 guides= 1 batches= 149 guide_batch_units= 149
+22/39 USF1 cells= 161 guides= 1 batches= 115 guide_batch_units= 115
+23/39 STAT2 cells= 69 guides= 1 batches= 60 guide_batch_units= 60
+24/39 FOXO1 cells= 185 guides= 1 batches= 121 guide_batch_units= 121
+25/39 FOXO3 cells= 381 guides= 2 batches= 198 guide_batch_units= 262
+26/39 GATA2 cells= 329 guides= 2 batches= 187 guide_batch_units= 218
+27/39 SP3 cells= 146 guides= 1 batches= 114 guide_batch_units= 114
+28/39 PPARG cells= 121 guides= 2 batches= 99 guide_batch_units= 109
+29/39 FOXM1 cells= 224 guides= 1 batches= 151 guide_batch_units= 151
+30/39 MITF cells= 402 guides= 2 batches= 207 guide_batch_units= 275
+31/39 ELK1 cells= 143 guides= 1 batches= 109 guide_batch_units= 109
+32/39 BACH1 cells= 192 guides= 1 batches= 142 guide_batch_units= 142
+33/39 USF2 cells= 409 guides= 1 batches= 204 guide_batch_units= 204
+34/39 SMAD3 cells= 148 guides= 1 batches= 114 guide_batch_units= 114
+35/39 RARA cells= 211 guides= 2 batches= 145 guide_batch_units= 181
+36/39 ETS2 cells= 91 guides= 1 batches= 71 guide_batch_units= 71
+37/39 SREBF1 cells= 127 guides= 2 batches= 99 guide_batch_units= 108
+38/39 WT1 cells= 281 guides= 1 batches= 173 guide_batch_units= 173
+39/39 IRF1 cells= 274 guides= 1 batches= 167 guide_batch_units= 167
+
+OUTCOME_VECTOR_STRUCTURE_PASS
+
+=== R3B MATERIALIZATION MANIFEST ===
+{
+  "stage": "RECOMB-SA5R9R3B",
+  "status": "OUTCOME_RESPONSE_VECTORS_MATERIALIZED",
+  "expression_values_read": true,
+  "primary_scoring_performed": false,
+  "correlations_computed": false,
+  "go_no_go_evaluated": false,
+  "expression_matrix": "X",
+  "expression_policy": "exactly_as_distributed",
+  "additional_normalization": false,
+  "control_definition": {
+    "gene": "non-targeting",
+    "perturbation": "control",
+    "nperts": 0,
+    "n_cells": 75328
+  },
+  "perturbation_definition": {
+    "gene": "frozen source",
+    "nperts": 1
+  },
+  "aggregation_order": [
+    "batch-specific guide mean minus batch-specific pooled control mean",
+    "equal-weight mean across batches within guide",
+    "equal-weight mean across guides within source"
+  ],
+  "n_sources": 39,
+  "n_measured_genes": 8248,
+  "n_source_response_rows": 321672,
+  "outcome_h5ad_sha256": "d3269d9c863d96555eba768b42ab330cc1b57493cd33b4ac8fe7fbab8278f104",
+  "prediction_vectors_sha256": "3507eae182085235dcec8011d65cd62ec352e44a5fa55550e44fa3b68578288f",
+  "observed_response_vectors_sha256": "c54399beb89e725e3e9b42b36fb0d9303f663d46dc0821036a535ea3bcdd570e",
+  "guide_response_vectors_sha256": "e4f5c37f892944de826a1ec186d75540d573d99412bb47b5b50326a6fc1ad4ce",
+  "guide_batch_counts_sha256": "d7d04678f88d393e0edcba38278401a3d10cf4fa1600ec67b5f5286d56cce061",
+  "control_batch_counts_sha256": "fefed263b8fa698f1eb151d896f1018b272c9eee858a8bec4927495cf373ccf7",
+  "source_materialization_audit_sha256": "5dc1c0235806f8e38a8a39e8c23974e674690b9c6c998c41a89108b9d8511fa0"
+}
+
+=== ARTIFACT HASHES ===
+c54399beb89e725e3e9b42b36fb0d9303f663d46dc0821036a535ea3bcdd570e observed_response_vectors.tsv.gz
+e4f5c37f892944de826a1ec186d75540d573d99412bb47b5b50326a6fc1ad4ce guide_response_vectors.tsv.gz
+d7d04678f88d393e0edcba38278401a3d10cf4fa1600ec67b5f5286d56cce061 guide_batch_counts.tsv
+fefed263b8fa698f1eb151d896f1018b272c9eee858a8bec4927495cf373ccf7 control_batch_counts.tsv
+5dc1c0235806f8e38a8a39e8c23974e674690b9c6c998c41a89108b9d8511fa0 source_materialization_audit.tsv
+25fe6cb3353146e14fe1601c723cbe0c22b53d005b66a93757aedb040a9129d2 outcome_materialization_manifest.json
+
+SA5R9R3B_OUTCOME_MATERIALIZATION_PASS
+(base) linyibu@DESKTOP-RSSC3MS:/mnt/c/Users/Linyibu/Downloads$ echo "=== R3B FILES ==="
+
+find outcomes -maxdepth 1 -type f \
+  -printf '%f\t%s bytes\n' | sort
+
+echo
+echo "=== SOURCE AUDIT ==="
+
+cat outcomes/source_materialization_audit.tsv
+
+echo
+echo "=== MANIFEST ==="
+
+cat outcomes/outcome_materialization_manifest.json
+=== R3B FILES ===
+control_batch_counts.tsv        2045 bytes
+guide_batch_counts.tsv  403980 bytes
+guide_response_vectors.tsv.gz   6268292 bytes
+observed_response_vectors.tsv.gz        4348517 bytes
+outcome_materialization_manifest.json   1548 bytes
+source_materialization_audit.tsv        1009 bytes
+
+=== SOURCE AUDIT ===
+source  n_cells n_guides        n_source_batches        n_guide_batch_units     n_measured_genes
+MYC     99      1       78      78      8248
+E2F1    226     1       149     149     8248
+ZNF263  333     2       193     241     8248
+STAT1   127     1       101     101     8248
+E2F4    158     1       117     117     8248
+SP1     198     1       143     143     8248
+TP53    220     1       137     137     8248
+FOXP1   816     4       251     545     8248
+ESR1    177     2       124     133     8248
+HIF1A   163     1       120     120     8248
+NFKB1   321     1       189     189     8248
+ETS1    352     1       184     184     8248
+RELA    185     1       139     139     8248
+EGR1    374     2       198     254     8248
+CTCF    109     1       86      86      8248
+JUN     216     1       155     155     8248
+SPI1    82      1       70      70      8248
+FOS     406     2       204     275     8248
+YY1     177     1       134     134     8248
+STAT3   170     1       119     119     8248
+CREB1   198     1       149     149     8248
+USF1    161     1       115     115     8248
+STAT2   69      1       60      60      8248
+FOXO1   185     1       121     121     8248
+FOXO3   381     2       198     262     8248
+GATA2   329     2       187     218     8248
+SP3     146     1       114     114     8248
+PPARG   121     2       99      109     8248
+FOXM1   224     1       151     151     8248
+MITF    402     2       207     275     8248
+ELK1    143     1       109     109     8248
+BACH1   192     1       142     142     8248
+USF2    409     1       204     204     8248
+SMAD3   148     1       114     114     8248
+RARA    211     2       145     181     8248
+ETS2    91      1       71      71      8248
+SREBF1  127     2       99      108     8248
+WT1     281     1       173     173     8248
+IRF1    274     1       167     167     8248
+
+=== MANIFEST ===
+{
+  "stage": "RECOMB-SA5R9R3B",
+  "status": "OUTCOME_RESPONSE_VECTORS_MATERIALIZED",
+  "expression_values_read": true,
+  "primary_scoring_performed": false,
+  "correlations_computed": false,
+  "go_no_go_evaluated": false,
+  "expression_matrix": "X",
+  "expression_policy": "exactly_as_distributed",
+  "additional_normalization": false,
+  "control_definition": {
+    "gene": "non-targeting",
+    "perturbation": "control",
+    "nperts": 0,
+    "n_cells": 75328
+  },
+  "perturbation_definition": {
+    "gene": "frozen source",
+    "nperts": 1
+  },
+  "aggregation_order": [
+    "batch-specific guide mean minus batch-specific pooled control mean",
+    "equal-weight mean across batches within guide",
+    "equal-weight mean across guides within source"
+  ],
+  "n_sources": 39,
+  "n_measured_genes": 8248,
+  "n_source_response_rows": 321672,
+  "outcome_h5ad_sha256": "d3269d9c863d96555eba768b42ab330cc1b57493cd33b4ac8fe7fbab8278f104",
+  "prediction_vectors_sha256": "3507eae182085235dcec8011d65cd62ec352e44a5fa55550e44fa3b68578288f",
+  "observed_response_vectors_sha256": "c54399beb89e725e3e9b42b36fb0d9303f663d46dc0821036a535ea3bcdd570e",
+  "guide_response_vectors_sha256": "e4f5c37f892944de826a1ec186d75540d573d99412bb47b5b50326a6fc1ad4ce",
+  "guide_batch_counts_sha256": "d7d04678f88d393e0edcba38278401a3d10cf4fa1600ec67b5f5286d56cce061",
+  "control_batch_counts_sha256": "fefed263b8fa698f1eb151d896f1018b272c9eee858a8bec4927495cf373ccf7",
+  "source_materialization_audit_sha256": "5dc1c0235806f8e38a8a39e8c23974e674690b9c6c998c41a89108b9d8511fa0"
+}(base) linyibu@DESKTOP-RSSC3MS:/mnt/c/Users/Linyibu/Downloads$

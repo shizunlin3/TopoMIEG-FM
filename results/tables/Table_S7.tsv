@@ -1,0 +1,3 @@
+Analysis	Sources	Median eq. rho	CI low	CI high	Paired sources	Median eq.-one	Paired CI low	Paired CI high	Native > rewired fraction
+Primary raw-count outcome	39	-0.0455	-0.1713	0.0803	27	-0.0015	-0.1584	0.0675	0.1538
+CP10K + log1p sensitivity	39	-0.0603	-0.1169	0.0490	27	-0.0554	-0.1240	0.0825	0.1282

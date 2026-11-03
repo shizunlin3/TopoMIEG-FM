@@ -1,0 +1,120 @@
+{
+  "stage": "RECOMB-SA5R1",
+  "experiment": "LGE-BRIDGE-01",
+  "status": "PROSPECTIVE_FROZEN_NOT_EXECUTED",
+  "scientific_question": "Can local-equilibrium response provide an orthogonal reliability criterion that distinguishes a structurally supported synthetic genetic mechanism from a deliberately higher-confidence but structurally incorrect decoy?",
+  "claim_scope": {
+    "allowed_if_go": "Synthetic local-equilibrium compatibility can distinguish graph-consistent candidate mechanisms from deliberately high-confidence structural decoys under the frozen controlled generator.",
+    "prohibited": [
+      "real genomic loci are biological steady states",
+      "equilibrium compatibility is a posterior probability",
+      "equilibrium compatibility reweights or filters real-data PIPs",
+      "the experiment validates a real-GWAS Z-to-equilibrium-field mapping",
+      "the experiment establishes disease mechanism or regulatory causality"
+    ]
+  },
+  "model": {
+    "state_space": "magnetization u in (-1,1)^p; Bernoulli-like activity q=(u+1)/2 only for descriptive interpretation",
+    "equilibrium_map": "Phi(u;b,W)=tanh(b+W u)",
+    "fixed_point": "u*=Phi(u*;b,W)",
+    "jacobian": "J=diag(1-u*^2) W",
+    "global_contraction_design": "||W||_2 is rescaled to 0.30, therefore global Lipschitz constant <=0.30<1",
+    "residual_metric": "max_i |u_i-Phi_i(u;b,W)|",
+    "effective_spectral_radius": "rho(J)",
+    "real_data_semantics": "none; synthetic-only reliability qualification"
+  },
+  "world_generator": {
+    "seed": 20261102,
+    "n_worlds": 128,
+    "p": 24,
+    "n_modules": 4,
+    "module_size": 6,
+    "within_edge_probability": 0.55,
+    "cross_edge_probability": 0.08,
+    "within_abs_weight_range": [0.40, 1.00],
+    "cross_abs_weight_range": [0.10, 0.35],
+    "within_positive_probability": 0.80,
+    "cross_positive_probability": 0.50,
+    "operator_norm_target": 0.30,
+    "baseline_field_sd": 0.08,
+    "baseline_field_clip": 0.25,
+    "source_perturbation_abs_delta": 0.50,
+    "perturbation_sign_rule": "even world_id +delta; odd world_id -delta",
+    "true_mechanism_rule": "choose a source with at least one within-module outgoing edge; target is its largest-|weight| within-module outgoing edge; claimed direction is sign(delta*W[target,source])",
+    "high_confidence_wrong_rule": "same source; target is a non-neighbor in a different module chosen to minimize in/out-degree mismatch to the true target; claimed direction equals the true claimed direction",
+    "wrong_sign_control": "same source and true target with opposite claimed direction",
+    "permuted_graph_control": "apply a non-identity simultaneous row/column permutation P W P^T while keeping source/target labels fixed"
+  },
+  "confidence_stress_test": {
+    "interpretation": "synthetic adversarial confidence assignment; not a model of calibrated real-world confidence",
+    "true_mechanism_confidence": 0.80,
+    "high_confidence_wrong_confidence": 0.95,
+    "wrong_sign_confidence": 0.60,
+    "purpose": "force confidence and equilibrium reliability to disagree by construction so the reliability axis cannot be mistaken for another confidence score"
+  },
+  "mechanism_reliability": {
+    "baseline_equilibrium": "u0*=Phi(u0*;b0,W)",
+    "perturbed_equilibrium": "u1*=Phi(u1*;b0+delta*e_source,W)",
+    "signed_local_response": "R_eq(M)=s_claim*(u1[target]-u0[target])/|delta|; larger is more compatible",
+    "directional_inconsistency": "D_eq(M)=-R_eq(M); lower is more compatible",
+    "admissibility": "both baseline and perturbed solves residual<=1e-10 and effective spectral radius<=0.35"
+  },
+  "solver": {
+    "initial_state": "tanh(b)",
+    "iteration": "Picard fixed-point iteration",
+    "tolerance": 1e-12,
+    "max_iterations": 10000,
+    "formal_residual_threshold": 1e-10,
+    "formal_effective_spectral_radius_threshold": 0.35
+  },
+  "primary_endpoints": {
+    "paired_win_fraction": "fraction of worlds with R_eq(true)>R_eq(high_confidence_wrong)",
+    "paired_delta": "R_eq(true)-R_eq(high_confidence_wrong)",
+    "bootstrap": {
+      "replicates": 2000,
+      "seed": 20261103,
+      "interval": "percentile 95% CI for median paired delta"
+    },
+    "win_interval": "Wilson 95% CI"
+  },
+  "secondary_endpoints": [
+    "matched true-mechanism R_eq versus wrong-sign control",
+    "matched true-mechanism R_eq versus permuted-graph true-label control",
+    "distribution of residuals and effective spectral radii",
+    "fraction of worlds in high-confidence/low-equilibrium-reliability quadrant"
+  ],
+  "go_no_go": {
+    "hard_preconditions": [
+      "128/128 worlds generated without adaptive regeneration after endpoint inspection",
+      "all matched baseline and perturbed equilibrium solves are admissible",
+      "no NaN/Inf and no duplicate true/wrong target identity within a world"
+    ],
+    "go_requires_all": [
+      "paired_win_fraction >= 0.70",
+      "Wilson 95% lower bound for paired_win_fraction > 0.50",
+      "95% bootstrap lower bound for median paired delta > 0",
+      "wrong-sign sanity-control win fraction >= 0.95"
+    ],
+    "no_go_if_any": [
+      "any hard precondition fails",
+      "any GO criterion fails",
+      "formal contract hash or runner hash differs from frozen manifest",
+      "formal execution occurs without explicit authorization token"
+    ]
+  },
+  "execution_governance": {
+    "formal_execution_authorized_in_SA5R1": false,
+    "required_authorization_filename": "LGE_BRIDGE_01_EXECUTION_AUTHORIZATION.txt",
+    "required_authorization_exact_text": "AUTHORIZED_AFTER_RECOMB_SA5R1_FREEZE",
+    "locked_3600_access": false,
+    "real_data_access": false,
+    "adaptive_parameter_tuning_after_results": false,
+    "post_hoc_world_exclusion": false
+  },
+  "outputs": {
+    "world_level_tsv": "LGE_BRIDGE_01_world_results.tsv",
+    "summary_json": "LGE_BRIDGE_01_summary.json",
+    "run_log": "LGE_BRIDGE_01_run.log",
+    "gate_json": "LGE_BRIDGE_01_GATE.json"
+  }
+}

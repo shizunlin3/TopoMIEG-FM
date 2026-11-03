@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+title: "TopoMIEG-FM: Prospective Perturbation Testing of Candidate Regulatory Graphs"
+message: "If you use this code, please cite the accompanying RECOMB 2027 manuscript."
+type: software
+authors:
+  - family-names: Shi
+    given-names: Zunlin
+  - family-names: Li
+    given-names: Zhi
+  - family-names: He
+    given-names: Lizhou
+  - family-names: Yang
+    given-names: Fan
+version: "recomb2027-submission-2026-11-03"
+date-released: 2026-11-03

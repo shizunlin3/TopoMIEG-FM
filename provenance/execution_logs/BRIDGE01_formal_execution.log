@@ -1,0 +1,33 @@
+{
+  "stage": "LGE-BRIDGE-01 formal execution",
+  "contract_sha256": "f35834415be43ed26c0300c3778455ca0e27f63dc0b0333165ee4a2c64c3b7c5",
+  "n_worlds": 128,
+  "matched_admissibility_fraction": 1.0,
+  "paired_win_fraction_true_over_high_confidence_wrong": 1.0,
+  "paired_win_wilson95": [
+    0.9708630437264916,
+    1.0
+  ],
+  "median_paired_delta": 0.09827184716471948,
+  "median_paired_delta_bootstrap95": [
+    0.09434823128764686,
+    0.10254341346125322
+  ],
+  "wrong_sign_sanity_win_fraction": 1.0,
+  "matched_true_over_permuted_win_fraction": 0.9765625,
+  "mean_R_eq_true": 0.09841033166185217,
+  "mean_R_eq_high_wrong": 0.00011795405363506736,
+  "maximum_matched_residual": 2.74349987172684e-13,
+  "maximum_matched_effective_spectral_radius": 0.2879842165979231,
+  "decision": "GO",
+  "claim_scope": {
+    "allowed_if_go": "Synthetic local-equilibrium compatibility can distinguish graph-consistent candidate mechanisms from deliberately high-confidence structural decoys under the frozen controlled generator.",
+    "prohibited": [
+      "real genomic loci are biological steady states",
+      "equilibrium compatibility is a posterior probability",
+      "equilibrium compatibility reweights or filters real-data PIPs",
+      "the experiment validates a real-GWAS Z-to-equilibrium-field mapping",
+      "the experiment establishes disease mechanism or regulatory causality"
+    ]
+  }
+}

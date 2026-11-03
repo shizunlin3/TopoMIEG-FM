@@ -1,0 +1,142 @@
+{
+  "stage": "RECOMB-SA5R9R1",
+  "title": "Mechanistic-Closure Real-World Validation Freeze",
+  "status": "PROSPECTIVE_FREEZE_ONLY",
+  "formal_results_executed": false,
+  "heldout_perturbation_outcomes_opened": false,
+  "scientific_question": "Given candidate regulatory relations supplied by an upstream discovery layer, can they be closed into a context-specific mechanism whose predicted perturbation-induced state transition agrees with an independently measured transcriptomic response?",
+  "project_boundary": {
+    "LRIN": "discovers candidate variant-to-gene / regulatory relations",
+    "TopoMIEG_FM": "assembles supplied candidate relations into a local mechanistic system and evaluates state-transition closure",
+    "primary_endpoint_not_allowed": "edge-label recovery / CRE-to-gene AUPRC"
+  },
+  "primary_benchmark": {
+    "system": "K562",
+    "baseline_state": {
+      "dataset": "E-MTAB-11264",
+      "assay": "single-cell joint RNA/chromatin profiling",
+      "use": "independent non-perturbational K562 baseline expression state",
+      "perturbation_labels_present": false
+    },
+    "candidate_relations": {
+      "resource": "DoRothEA human signed TF-target network",
+      "version": "1.23.0 / 2025 stable dataset lineage",
+      "confidence_levels": [
+        "A",
+        "B"
+      ],
+      "use": "upstream candidate relation set only",
+      "outcome_overlap": "none by design; perturbation outcomes are not used to define the relations"
+    },
+    "heldout_response": {
+      "study": "Replogle et al., Cell 2022, genome-scale K562 CRISPRi Perturb-seq",
+      "doi": "10.1016/j.cell.2022.05.013",
+      "bioproject": "PRJNA831566",
+      "processed_source": "official GWPS processed K562 genome-scale pseudobulk / expression response data",
+      "scope": "K562 genome-wide screen; all expressed genes targeted",
+      "policy": "Perturbation-specific downstream response vectors remain unopened by the model-development process until all eligible-source predictions and their SHA256 manifest are frozen."
+    }
+  },
+  "mechanism_construction": {
+    "eligible_source_rule": [
+      "source gene is perturbed in the held-out K562 screen",
+      "source gene is a DoRothEA TF with confidence-A/B outgoing relations",
+      "source and target genes are expressed in independent K562 baseline data",
+      "at least 20 evaluable downstream target genes remain after gene-ID intersection"
+    ],
+    "minimum_number_of_eligible_perturbations": 30,
+    "node_set": "V_s = source TF plus all expressed confidence-A/B direct targets of source s",
+    "edge_set": "E_s = every confidence-A/B signed DoRothEA interaction whose source and target both lie in V_s; this induced subgraph allows interactions among source targets and therefore permits local feedback/closure",
+    "edge_weight": "unit magnitude; sign from DoRothEA mode-of-regulation; confidence A/B used only for inclusion, not magnitude",
+    "operator_orientation": "W[i,j] is effect of regulator j on target i",
+    "operator_scaling": "rescale W to spectral norm 0.30 when nonzero",
+    "no_outcome_guided_edge_selection": true
+  },
+  "baseline_state_mapping": {
+    "expression_summary": "gene-level pseudobulk log1p expression from independent K562 baseline data",
+    "transform": "within each mechanism node set, rank baseline expression; map ranks monotonically to (-1,1) using x_obs_i = 2*(rank_i-0.5)/n - 1, then clip to [-0.95,0.95]",
+    "baseline_field": "b = atanh(x_obs) - W @ x_obs",
+    "reference_equilibrium": "x_obs = tanh(b + W @ x_obs)",
+    "interpretation": "baseline state is an anchored boundary condition rather than a fitted validation endpoint; external validation concerns the held-out perturbational transition"
+  },
+  "perturbation_model": {
+    "fixed_point": "x_star = tanh(b + W @ x_star)",
+    "source_perturbation": "b_pert = b - 0.50 * e_source",
+    "prediction": "Delta_pred = x_star(b_pert) - x_obs",
+    "solver_tolerance_inf": 1e-10,
+    "max_iterations": 10000,
+    "maximum_effective_spectral_radius": 0.35
+  },
+  "heldout_observed_response": {
+    "representation": "for each eligible source perturbation, observed pseudobulk expression response relative to non-targeting controls",
+    "evaluation_genes": "genes in V_s excluding the perturbed source and requiring presence in the held-out expression matrix",
+    "direct_source_gene_excluded": true,
+    "no_outcome_based_gene_filtering_for_primary_metric": true
+  },
+  "comparators": {
+    "primary_simple_comparator": "one-step signed-edge propagation Delta_linear = -0.50 * W @ e_source, evaluated on the same genes",
+    "negative_control": "degree- and sign-count-preserving target rewiring within each local mechanism; 100 rewires per source, seed 20261107"
+  },
+  "primary_metrics": {
+    "per_perturbation": "Spearman correlation rho_s between Delta_pred and held-out Delta_obs across evaluation genes",
+    "aggregate": "median rho_s across all eligible source perturbations",
+    "co_primary_gain": "median over sources of rho_equilibrium - rho_one_step",
+    "bootstrap": {
+      "replicates": 2000,
+      "seed": 20261108,
+      "unit": "source perturbation"
+    }
+  },
+  "hard_GO": [
+    "at least 30 eligible K562 source perturbations satisfy the prespecified relation-coverage rule",
+    "all predictions are frozen and SHA256-bound before perturbation response vectors are opened",
+    "bootstrap 95% lower CI of median rho_equilibrium is > 0",
+    "bootstrap 95% lower CI of median(rho_equilibrium - rho_one_step) is > 0",
+    "median rho_equilibrium is greater than the median of each source's rewired-network null distribution in at least 70% of eligible perturbations",
+    "all fixed-point solves used for the primary analysis satisfy residual <= 1e-10 and effective spectral radius <= 0.35"
+  ],
+  "secondary_metrics": [
+    "per-source Pearson correlation on response vectors",
+    "sign concordance among the top 20% largest absolute held-out responses within each source",
+    "cosine similarity of predicted and observed response vectors",
+    "program-level concordance using Hallmark gene-set scores, evaluated only after gene-level primary metrics are frozen",
+    "source-level relationship between baseline closure geometry and perturbation predictivity"
+  ],
+  "interpretable_case": {
+    "system": "BCL11A erythroid enhancer / fetal hemoglobin",
+    "classification": "secondary retrospective mechanistic-closure case",
+    "supplied_relations": [
+      "erythroid enhancer -> BCL11A",
+      "BCL11A represses HBG1/HBG2"
+    ],
+    "baseline_context": "unedited/control erythroid state",
+    "perturbation": "erythroid enhancer suppression/editing",
+    "predicted_transition": "BCL11A down; HBG1/HBG2 up; HbF program increases",
+    "heldout_transcriptomic_outcome": "edited-versus-unedited erythroid RNA-seq (GSE264491)",
+    "role": "interpretable biological demonstration; not the blinded scalable primary gate"
+  },
+  "external_generalization": {
+    "resource": "2026 primary human CD4+ T-cell genome-scale Perturb-seq",
+    "accession": "GSE314342",
+    "status_as_of_2026_11_02": "PUBLIC",
+    "role": "optional later cross-context external generalization",
+    "paper_A_restriction": "exclude Crohn/IBD-tagged analyses from primary Paper-A claims"
+  },
+  "leakage_rules": [
+    "Do not use Replogle perturbation response vectors to select sources, edges, signs, weights, node sets, hyperparameters, or solver parameters.",
+    "Do not use perturbation-derived differential-expression significance to filter primary evaluation genes.",
+    "Do not use GEARS/scGPT/other models trained on the same held-out perturbation outcomes as discovery inputs.",
+    "DoRothEA confidence A/B and signs are frozen before outcome access.",
+    "Only after prediction_manifest.tsv and SHA256SUMS are frozen may held-out response vectors be parsed for scoring.",
+    "No post-outcome retuning or source exclusion is permitted except predeclared technical invalidity (missing identifiers or solver failure), which remains in the denominator and is reported."
+  ],
+  "randomness": {
+    "rewire_seed": 20261107,
+    "bootstrap_seed": 20261108
+  },
+  "claim_authorization": {
+    "real_world_mechanistic_closure_claim_authorized_now": false,
+    "authorization_requires": "successful prospective K562 primary gate; BCL11A case may support interpretation but cannot rescue a failed primary gate"
+  },
+  "next_stage": "RECOMB-SA5R9R2 \u2014 Data Acquisition, Outcome Vault & Prediction-Manifest Freeze"
+}

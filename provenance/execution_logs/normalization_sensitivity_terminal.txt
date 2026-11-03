@@ -1,0 +1,225 @@
+(base) linyibu@DESKTOP-RSSC3MS:/mnt/c/Users/Linyibu/Downloads$ PY="$HOME/miniconda3/envs/topomieg-fm/bin/python"
+
+"$PY" - <<'PY'
+from pathlib import Path
+import h5py
+import numpy as np
+import pandas as pd
+import json
+import hashlib
+
+ROOT = Path("/mnt/c/Users/Linyibu/Downloads")
+
+H5 = ROOT / "assets/vault/ReplogleWeissman2022_K562_gwps.h5ad"
+SOURCE_FILE = ROOT / "RECOMB-SA5R9R2B3_BLIND_SOURCE_UNIVERSE.tsv"
+
+OUTDIR = ROOT / "failure_adjudication/representation_sensitivity"
+OUTDIR.mkdir(parents=True, exist_ok=True)
+
+TARGET_SUM = 10000.0
+CONTROL_CHUNK = 512
+
+
+def sha256(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1024 * 1024), b""):
+            h.update(chunk)
+PY  "\nSA5R9R3D03A_REPRESENTATION_SENSITIVITY_MATERIALIZATION_PASS"
+=== OPEN RAW-COUNT H5AD ===
+controls = 75328
+batches = 267
+genes = 8248
+control rows processed = 512 / 75328
+control rows processed = 13312 / 75328
+control rows processed = 26112 / 75328
+control rows processed = 38912 / 75328
+control rows processed = 51712 / 75328
+control rows processed = 64512 / 75328
+NORMALIZED_CONTROL_MEANS_PASS
+
+=== SOURCE MATERIALIZATION ===
+01/39 MYC cells= 99 guides= 1
+02/39 E2F1 cells= 226 guides= 1
+03/39 ZNF263 cells= 333 guides= 2
+04/39 STAT1 cells= 127 guides= 1
+05/39 E2F4 cells= 158 guides= 1
+06/39 SP1 cells= 198 guides= 1
+07/39 TP53 cells= 220 guides= 1
+08/39 FOXP1 cells= 816 guides= 4
+09/39 ESR1 cells= 177 guides= 2
+10/39 HIF1A cells= 163 guides= 1
+11/39 NFKB1 cells= 321 guides= 1
+12/39 ETS1 cells= 352 guides= 1
+13/39 RELA cells= 185 guides= 1
+14/39 EGR1 cells= 374 guides= 2
+15/39 CTCF cells= 109 guides= 1
+16/39 JUN cells= 216 guides= 1
+17/39 SPI1 cells= 82 guides= 1
+18/39 FOS cells= 406 guides= 2
+19/39 YY1 cells= 177 guides= 1
+20/39 STAT3 cells= 170 guides= 1
+21/39 CREB1 cells= 198 guides= 1
+22/39 USF1 cells= 161 guides= 1
+23/39 STAT2 cells= 69 guides= 1
+24/39 FOXO1 cells= 185 guides= 1
+25/39 FOXO3 cells= 381 guides= 2
+26/39 GATA2 cells= 329 guides= 2
+27/39 SP3 cells= 146 guides= 1
+28/39 PPARG cells= 121 guides= 2
+29/39 FOXM1 cells= 224 guides= 1
+30/39 MITF cells= 402 guides= 2
+31/39 ELK1 cells= 143 guides= 1
+32/39 BACH1 cells= 192 guides= 1
+33/39 USF2 cells= 409 guides= 1
+34/39 SMAD3 cells= 148 guides= 1
+35/39 RARA cells= 211 guides= 2
+36/39 ETS2 cells= 91 guides= 1
+37/39 SREBF1 cells= 127 guides= 2
+38/39 WT1 cells= 281 guides= 1
+39/39 IRF1 cells= 274 guides= 1
+
+=== MANIFEST ===
+{
+  "stage": "RECOMB-SA5R9R3D03A",
+  "status": "POST_PRIMARY_CP10K_LOG1P_OUTCOME_MATERIALIZED",
+  "primary_decision_changed": false,
+  "representation": "per-cell CP10K followed by log1p",
+  "target_sum": 10000.0,
+  "aggregation_order": [
+    "batch-specific guide mean minus batch control mean",
+    "equal-weight batches within guide",
+    "equal-weight guides within source"
+  ],
+  "n_sources": 39,
+  "n_genes": 8248,
+  "n_rows": 321672,
+  "h5ad_sha256": "d3269d9c863d96555eba768b42ab330cc1b57493cd33b4ac8fe7fbab8278f104",
+  "observed_sha256": "9746dad78c60fbbb0b6f3bb202035e9ff8812b5dc3c2fe36896cda800287a7d2",
+  "guide_observed_sha256": "d862d9d5a38fc94e271ca27dde5b90d5b3fc06d6a324c861c99cdcd3c8bfdb94",
+  "audit_sha256": "4eab0ede079704d41c932ba5efcb73426a7b2cbf1d3411c3469d1f7d7b2f5a1c"
+}
+
+=== HASHES ===
+9746dad78c60fbbb0b6f3bb202035e9ff8812b5dc3c2fe36896cda800287a7d2 observed_response_vectors_cp10k_log1p.tsv.gz
+d862d9d5a38fc94e271ca27dde5b90d5b3fc06d6a324c861c99cdcd3c8bfdb94 guide_response_vectors_cp10k_log1p.tsv.gz
+4eab0ede079704d41c932ba5efcb73426a7b2cbf1d3411c3469d1f7d7b2f5a1c materialization_audit.tsv
+3eeebc319f7537fdc5fd56b69c790fa9f92605ed5d083827bea304a9aa1cac51 representation_sensitivity_manifest.json
+
+SA5R9R3D03A_REPRESENTATION_SENSITIVITY_MATERIALIZATION_PASS
+(base) linyibu@DESKTOP-RSSC3MS:/mnt/c/Users/Linyibu/Downloads$ PY="$HOME/miniconda3/envs/topomieg-fm/bin/python"
+
+"$PY" - <<'PY'
+from pathlib import Path
+from itertools import combinations
+import json
+import hashlib
+import numpy as np
+import pandas as pd
+from scipy.stats import rankdata
+
+ROOT = Path("/mnt/c/Users/Linyibu/Downloads")
+
+PRED = ROOT / "predictions/prediction_vectors.tsv.gz"
+REW = ROOT / "predictions/rewired_predictions.tsv.gz"
+
+RAWOBS = ROOT / "outcomes/observed_response_vectors.tsv.gz"
+
+NORMOBS = ROOT / \
+    "failure_adjudication/representation_sensitivity/" \
+    "observed_response_vectors_cp10k_log1p.tsv.gz"
+
+GUIDE = ROOT / \
+    "failure_adjudication/representation_sensitivity/" \
+    "guide_response_vectors_cp10k_log1p.tsv.gz"
+
+OUTDIR = ROOT / \
+PY  "\nSA5R9R3D03_REPRESENTATION_SENSITIVITY_PASS"cue or replace the frozen primary NO-GO."
+=== R3D03 REPRESENTATION SENSITIVITY ===
+{
+  "stage": "RECOMB-SA5R9R3D03B",
+  "status": "POST_PRIMARY_REPRESENTATION_SENSITIVITY_COMPLETE",
+  "primary_decision": "NO_GO_PRIMARY_REAL_WORLD_MECHANISTIC_CLOSURE",
+  "primary_decision_changed": false,
+  "equilibrium": {
+    "n_sources": 39,
+    "median_rho": -0.06027667984189724,
+    "bootstrap_95_ci": [
+      -0.11688311688311688,
+      0.04901960784313726
+    ]
+  },
+  "paired_equilibrium_vs_one_step": {
+    "n_sources": 27,
+    "median_difference": -0.05539066983665793,
+    "bootstrap_95_ci": [
+      -0.12403880188742866,
+      0.0824561403508772
+    ]
+  },
+  "rewired": {
+    "n_sources": 39,
+    "fraction_native_gt_rewired_median": 0.1282051282051282
+  },
+  "representation_effect": {
+    "median_raw_vs_normalized_observed_spearman": 0.8531111337757323
+  },
+  "multiguide_reproducibility": {
+    "n_multiguide_sources": 11,
+    "median_pairwise_guide_rho_normalized": 0.010608341448727784
+  },
+  "source_self_response": {
+    "n_measurable": 29,
+    "fraction_negative_among_measurable": 1.0
+  },
+  "interpretation": "Post-primary sensitivity only; cannot rescue or replace the frozen primary NO-GO."
+}
+
+=== SOURCE SCORES ===
+source  n_genes  rho_equilibrium_normalized  rho_one_step_normalized  rho_difference_normalized  n_finite  median_rewired_normalized  beats_rewired_median_normalized  rho_raw_vs_normalized_observed  n_guides  median_pairwise_guide_rho_normalized  source_self_delta_normalized
+ BACH1       23                   -0.060277                      NaN                        NaN       100                  -0.060277                            False                        0.800743         1                                   NaN                     -0.209506
+ CREB1       18                    0.079463                -0.257115                   0.336578       100                   0.079463                            False                        0.831088         1                                   NaN                     -0.140745
+  CTCF       45                    0.055863                -0.008951                   0.064814       100                   0.055863                            False                        0.853111         1                                   NaN                     -0.156056
+  E2F1      183                   -0.165178                 0.065770                  -0.230947       100                  -0.163952                            False                        0.893038         1                                   NaN                     -0.133574
+  E2F4      202                   -0.067588                 0.042588                  -0.110176       100                  -0.064886                            False                        0.856798         1                                   NaN                     -0.121592
+  EGR1       45                    0.109354                -0.016606                   0.125960       100                   0.122793                            False                        0.843025         2                              0.024410                     -0.044111
+  ELK1       15                    0.125000                      NaN                        NaN       100                   0.125000                            False                        0.877341         1                                   NaN                     -0.078882
+  ESR1       57                    0.139033                 0.131936                   0.007097       100                   0.139811                            False                        0.869474         2                              0.014358                           NaN
+  ETS1       57                   -0.005704                 0.358168                  -0.363872       100                  -0.005250                            False                        0.907523         1                                   NaN                           NaN
+  ETS2        9                   -0.616667                      NaN                        NaN       100                  -0.616667                            False                        0.842403         1                                   NaN                     -0.113849
+   FOS       31                   -0.093145                 0.024398                  -0.117543       100                  -0.102823                             True                        0.845242         2                              0.010608                           NaN
+ FOXM1       22                   -0.142857                      NaN                        NaN       100                  -0.142857                            False                        0.762120         1                                   NaN                     -0.119274
+ FOXO1       17                    0.049020                -0.237171                   0.286190       100                   0.049020                            False                        0.882587         1                                   NaN                     -0.047791
+ FOXO3       19                   -0.468421                -0.215166                  -0.253255       100                  -0.468421                            False                        0.885487         2                              0.012959                     -0.086566
+ FOXP1       95                    0.175128                      NaN                        NaN       100                   0.175842                            False                        0.875592         4                              0.011068                     -0.033813
+ GATA2       20                   -0.016541                -0.113531                   0.096990       100                  -0.016541                            False                        0.768214         2                              0.010442                     -0.069369
+ HIF1A       65                   -0.083876                      NaN                        NaN       100                  -0.083876                            False                        0.836009         1                                   NaN                     -0.135245
+  IRF1        5                   -0.200000                 0.288675                  -0.488675       100                  -0.200000                            False                        0.830706         1                                   NaN                           NaN
+   JUN       30                   -0.104783                 0.019256                  -0.124039       100                  -0.088320                            False                        0.865904         1                                   NaN                     -0.125121
+  MITF       15                   -0.303571                      NaN                        NaN       100                  -0.303571                            False                        0.839124         2                              0.028513                     -0.111354
+   MYC      260                   -0.119172                 0.062768                  -0.181940       100                  -0.119006                            False                        0.754636         1                                   NaN                     -0.027039
+ NFKB1       43                    0.039491                 0.154479                  -0.114988       100                   0.023257                             True                        0.841791         1                                   NaN                     -0.125125
+ PPARG        9                   -0.783333                -0.621059                  -0.162274       100                  -0.783333                            False                        0.743054         2                             -0.023507                           NaN
+  RARA       11                   -0.290909                -0.400000                   0.109091       100                  -0.290909                            False                        0.889422         2                              0.004397                           NaN
+  RELA       40                    0.200938                 0.099747                   0.101191       100                   0.185647                             True                        0.781244         1                                   NaN                     -0.106710
+ SMAD3        8                    0.000000                -0.412393                   0.412393       100                   0.000000                            False                        0.867966         1                                   NaN                           NaN
+   SP1      137                   -0.243785                -0.001574                  -0.242210       100                  -0.243698                            False                        0.828215         1                                   NaN                     -0.118567
+   SP3       19                    0.082456                 0.000000                   0.082456       100                   0.082456                            False                        0.898845         1                                   NaN                     -0.159275
+  SPI1       31                   -0.291158                -0.088083                  -0.203075       100                  -0.293981                             True                        0.898368         1                                   NaN                     -0.175928
+SREBF1       14                   -0.085714                      NaN                        NaN       100                  -0.085714                            False                        0.889984         2                             -0.038693                     -0.024998
+ STAT1      109                    0.062228                 0.117619                  -0.055391       100                   0.063252                            False                        0.882462         1                                   NaN                     -0.255489
+ STAT2       16                    0.176471                      NaN                        NaN       100                   0.176471                            False                        0.880556         1                                   NaN                           NaN
+ STAT3       26                    0.173333                 0.269430                  -0.096097       100                   0.179487                            False                        0.871667         1                                   NaN                     -0.144489
+  TP53      126                   -0.043690                -0.056030                   0.012340       100                  -0.049671                             True                        0.789721         1                                   NaN                           NaN
+  USF1       22                   -0.116883                      NaN                        NaN       100                  -0.116883                            False                        0.878927         1                                   NaN                           NaN
+  USF2       15                   -0.317857                      NaN                        NaN       100                  -0.317857                            False                        0.864908         1                                   NaN                     -0.179815
+   WT1        8                    0.571429                 0.377964                   0.193464       100                   0.571429                            False                        0.796567         1                                   NaN                     -0.079478
+   YY1       54                   -0.175532                -0.229549                   0.054017       100                  -0.175532                            False                        0.758647         1                                   NaN                     -0.160215
+ZNF263      144                    0.094282                      NaN                        NaN       100                   0.096384                            False                        0.850337         2                              0.007523                     -0.035834
+
+=== HASHES ===
+d867f361e8f2e2b793c995c61a9f318061a4ebd2631f70fdd1b42898ff6f5ec0 representation_sensitivity_source_scores.tsv
+29ced9e51c59824f3ba5c2a1d0580c62c373310c93ea23e6dbfa315908edd2c5 representation_sensitivity_summary.json
+
+SA5R9R3D03_REPRESENTATION_SENSITIVITY_PASS
+(base) linyibu@DESKTOP-RSSC3MS:/mnt/c/Users/Linyibu/Downloads$

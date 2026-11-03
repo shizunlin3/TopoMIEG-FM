@@ -1,0 +1,57 @@
+{
+  "stage": "RECOMB-SA5R9R2",
+  "title": "Data Acquisition, Outcome Vault & Prediction-Manifest Freeze",
+  "status": "EXECUTABLE_FREEZE_WITH_RUNTIME_ACQUISITION_BLOCKER",
+  "scientific_contract_parent": "RECOMB-SA5R9R1",
+  "heldout_response_parsed_in_chat_runtime": false,
+  "prediction_manifest_created_in_chat_runtime": false,
+  "strict_blind_universe_refinement": "Predict all baseline-expressed DoRothEA A/B TFs with >=20 baseline-expressed A/B targets. Do not consult the Replogle perturbation target list before prediction freeze.",
+  "discovery_assets": {
+    "dorothea": {
+      "version": "1.23.0",
+      "url": "https://bioconductor.org/packages/3.23/data/experiment/src/contrib/dorothea_1.23.0.tar.gz",
+      "filter": "human; confidence A/B"
+    },
+    "baseline": {
+      "study": "E-MTAB-11264",
+      "study_url": "https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-11264",
+      "required_object": "K562 gene-level baseline expression pseudobulk"
+    }
+  },
+  "outcome_vault": {
+    "figshare_article_id": 20029387,
+    "api": "https://api.figshare.com/v2/articles/20029387",
+    "allowed_file_names": [
+      "K562_gwps_normalized_bulk_01.h5ad",
+      "K562_gwps_raw_bulk_01.h5ad"
+    ],
+    "policy": "download and SHA256 only; no HDF5 parsing before prediction freeze"
+  },
+  "prediction_freeze": {
+    "source_universe": "all baseline-expressed DoRothEA A/B TFs with >=20 baseline-expressed A/B targets",
+    "perturbation_delta": -0.5,
+    "operator_spectral_norm": 0.3,
+    "solver_tol": 1e-10,
+    "solver_max_iter": 10000,
+    "frozen_primary_prediction": "equilibrium downstream delta",
+    "frozen_comparator_prediction": "one-step signed-edge downstream delta",
+    "outputs": [
+      "prediction_vectors.tsv.gz",
+      "rewired_predictions.tsv.gz",
+      "mechanism_manifest.tsv",
+      "prediction_manifest.json",
+      "SHA256SUMS.json"
+    ]
+  },
+  "negative_control": {
+    "rewires_per_source": 100,
+    "seed": 20261107,
+    "must_be_frozen_before_unseal": true,
+    "degree_preservation": "directed in/out degree preserved separately within positive and negative edge classes"
+  },
+  "evaluation_after_unseal": {
+    "bootstrap_seed": 20261108,
+    "bootstrap_replicates": 2000,
+    "minimum_eligible_sources": 30
+  }
+}

@@ -1,0 +1,11 @@
+name: topomieg-fm-release
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - numpy>=1.26
+  - pandas>=2.0
+  - scipy>=1.11
+  - anndata>=0.10
+  - h5py>=3.10
+  - requests>=2.31
